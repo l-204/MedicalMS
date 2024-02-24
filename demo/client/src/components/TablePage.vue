@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-button size="medium" type="" icon="el-icon-circle-plus-outline" @click="openAddDialog()"
-            style="margin-top: 10px;">添加</el-button>
+            style="margin-top: 10px;" v-if="identity == '管理员'">添加</el-button>
         <div style="margin: 5px 0 20px 0; float: right;">
             <el-input v-model="searchword" placeholder="请输入关键字查询" class="input-with-select">
                 <el-select v-model="keywords" slot="prepend" placeholder="请选择" style="width: 120px;">

@@ -27,13 +27,14 @@ app.use(function (req, res, next) {
 // 注册接口
 app.post('/api/register', (req, res) => {
     const { username, password } = req.body;
+
     const query = `SELECT * FROM users WHERE username='${username}'`;
     pool.query(query, (err, results) => {
         if (err) throw err;
         if (results.length > 0) {
             res.status(400).json({ message: '用户名已存在' });
         } else {
-            const insertQuery = `INSERT INTO users(username, password,identity, created_at) VALUES('${username}', '${password}', '普通用户',NOW())`;
+            const insertQuery = `INSERT INTO users(username, password, gender, email, phone_number, identity, job_number, created_at, last_login_at) VALUES('${username}', '${password}', '', '', '',  '普通用户', '', NOW(), NOW())`;
             pool.query(insertQuery, (err, results) => {
                 if (err) throw err;
                 res.status(200).json({ message: '注册成功' });
@@ -44,6 +45,7 @@ app.post('/api/register', (req, res) => {
 
 // 登录接口
 app.post('/api/login', (req, res) => {
+
     const { username, password } = req.body;
     const updatequery = `UPDATE users SET last_login_at=NOW() WHERE username='${username}'`;
     pool.query(updatequery, (err, results) => {

@@ -92,16 +92,11 @@ import * as echarts from 'echarts';
 import moment from 'moment';
 export default {
     data() {
-        // 获取localStorage中的用户信息
-        const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-        // 
         return {
-            username: userInfo.username,
-            gender: userInfo.gender,
-            identity: userInfo.identity,
-            last_login_at: moment(userInfo.last_login_at).format('YYYY-MM-DD HH:mm:ss'),
-            currentPage: 1, // 当前页码
-            pageSize: 10,   // 每页显示条数
+            username: '',
+            gender: '',
+            identity: '',
+            last_login_at: '',
 
             images: [
                 require('../assets/1.jpg'),
@@ -128,9 +123,28 @@ export default {
         MenuPage
     },
     mounted() {
+        this.getInfo()
         this.getDay()
     },
     methods: {
+        getInfo() {
+            const tableName = 'users'
+            fetch(`http://localhost:3000/api/all/select/${tableName}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            }).then(res => res.json()
+                .then(data => {
+                    // 数据过滤
+                    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+                    const user_id = userInfo.user_id
+                    const userInfoData = data.filter(item => item.user_id == user_id)
+
+                    this.username = userInfoData[0].username
+                    this.gender = userInfoData[0].gender
+                    this.identity = userInfoData[0].identity
+                    this.last_login_at = moment(userInfoData[0].last_login_at).format('YYYY-MM-DD HH:mm:ss')
+                }))
+        },
         getDay() {
             const tableName = 'patients'
             fetch(`http://localhost:3000/api/all/select/${tableName}`, {

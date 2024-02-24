@@ -67,6 +67,11 @@ export default {
                     this.isAdmin = false;
                     this.updateRight()
                     if (this.user == this.username) {
+                        // 获取当前身份
+                        const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+                        // 将修改的身份保存到本地
+                        userInfo.identity = '普通用户'
+                        localStorage.setItem('userInfo', JSON.stringify(userInfo))
                         this.identity = '普通用户'
                     }
                     this.$message({
